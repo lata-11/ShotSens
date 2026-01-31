@@ -37,6 +37,8 @@ class MinimalSceneOutput(BaseModel):
     camera_style: str
     composition: str
     set_design: str
-    props: str
+    props: list[str]
+    costumes: str
+    narrative_reasoning: str
     blocking: str
     confidence: float

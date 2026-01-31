@@ -1,4 +1,9 @@
 import streamlit as st
+import os
+import base64
+import base64
+from io import BytesIO
+from PIL import Image
 from src.agent.scene_intent import SceneAgent
 from utils.convert_image_to_base64 import get_base64_image
 
@@ -645,15 +650,43 @@ with col2:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Handle Load Example button
+
+# Convert base64 → PIL image
+def b64_to_pil(b64_string):
+    img_bytes = base64.b64decode(b64_string)
+    return Image.open(BytesIO(img_bytes))
+
 if load_example:
-    st.session_state.example_text = """INT. HOSPITAL ROOM - NIGHT
-SHE laughs as HE jokes. Her hands tremble under the blanket."""
+    if scene_text.strip():
+        with st.spinner("🎨 Generating visual scene setup..."):
+            result = agent.run(scene_text)
+            generated_imgs_b64 = agent.generate_image(result)
+
+            if generated_imgs_b64:
+                st.session_state["generated_image"] = generated_imgs_b64[0]
+            else:
+                st.warning("No image generated.")
+    else:
+        st.warning("Please enter a scene first.")
+
     st.rerun()
 
-# Load example text if it exists in session state
-if "example_text" in st.session_state and not scene_text:
-    scene_text = st.session_state.example_text
+
+if "generated_image" in st.session_state:
+    img_b64 = st.session_state["generated_image"]
+
+    # HTML render (bypasses all PIL/Streamlit issues)
+    st.markdown(
+        f"""
+        <div style='text-align:center;'>
+            <img src="data:image/png;base64,{img_b64}" 
+                 style="width:50%;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.2);" />
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
 
 def render_result(result):
     st.markdown('<div class="results-container">', unsafe_allow_html=True)

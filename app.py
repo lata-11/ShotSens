@@ -556,7 +556,22 @@ st.markdown("""
         height: auto;  /* keeps aspect ratio */
         object-fit: contain;
     }
-
+    
+    .loader {
+        border: 6px solid #f3f3f3;
+        border-top: 6px solid #ff4b4b;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: auto;
+        }
+        @keyframes spin {
+        100% { transform: rotate(360deg); }
+        }
+        .center {
+        text-align: center;
+        }
     /* Hide Streamlit branding */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
@@ -636,19 +651,31 @@ SHE laughs as HE jokes. Her hands tremble under the blanket."""
 if "example_text" in st.session_state and not scene_text:
     scene_text = st.session_state.example_text
 
-
 def render_result(result):
     st.markdown('<div class="results-container">', unsafe_allow_html=True)
     
-    # Emotion and Confidence section - Centered cards
+    # ---------- Emotional Analysis Section ----------
     st.markdown('<div class="section-header" style="margin-top: 3rem;">Emotional Analysis</div>', unsafe_allow_html=True)
-    
-    # Center the emotion cards
+
+    confidence_display = (
+        f"{result.validated_confidence * 100:.0f}%"
+        if result.validated_confidence is not None
+        else "N/A"
+    )
+
+    if isinstance(result.narrative_reasoning, str):
+        reasoning_text = result.narrative_reasoning
+    elif isinstance(result.narrative_reasoning, list):
+        reasoning_text = " ".join(result.narrative_reasoning)
+    else:
+        reasoning_text = "No reasoning available"
+
+
     col_spacer1, col_content, col_spacer2 = st.columns([0.5, 2, 0.5])
-    
+
     with col_content:
         col_emotion, col_confidence = st.columns(2)
-        
+
         with col_emotion:
             st.markdown(f"""
             <div class="emotion-card">
@@ -656,21 +683,29 @@ def render_result(result):
                 <span class="emotion-badge">{result.emotion}</span>
             </div>
             """, unsafe_allow_html=True)
-        
+
         with col_confidence:
             st.markdown(f"""
             <div class="emotion-card">
                 <div class="emotion-card-label">Confidence Score</div>
-                <span class="confidence-badge">{result.confidence * 100:.0f}%</span>
+                <span class="confidence-badge">{confidence_display}</span>
             </div>
             """, unsafe_allow_html=True)
-    
-    # Production Details Grid
+            
+    # Production Details Section 
     st.markdown('<div class="section-header" style="margin-top: 3.5rem; margin-bottom: 2rem;">Production Details</div>', unsafe_allow_html=True)
-    
-    # First row
+
+    # Safe props rendering
+    if isinstance(result.props, list) and result.props:
+        props_display = ", ".join(result.props)
+    elif isinstance(result.props, str):
+        props_display = result.props
+    else:
+        props_display = "None"
+
+
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         st.markdown(f"""
         <div class="result-card">
@@ -678,7 +713,7 @@ def render_result(result):
             <div class="result-card-content">{result.camera_style}</div>
         </div>
         """, unsafe_allow_html=True)
-    
+
     with col2:
         st.markdown(f"""
         <div class="result-card">
@@ -686,7 +721,7 @@ def render_result(result):
             <div class="result-card-content">{result.visual_mood}</div>
         </div>
         """, unsafe_allow_html=True)
-    
+
     with col3:
         st.markdown(f"""
         <div class="result-card">
@@ -694,10 +729,9 @@ def render_result(result):
             <div class="result-card-content">{result.composition}</div>
         </div>
         """, unsafe_allow_html=True)
-    
-    # Second row
+
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         st.markdown(f"""
         <div class="result-card">
@@ -705,44 +739,66 @@ def render_result(result):
             <div class="result-card-content">{result.set_design}</div>
         </div>
         """, unsafe_allow_html=True)
-    
+
     with col2:
+        st.markdown(f"""
+        <div class="result-card">
+            <div class="result-card-header">PROPS</div>
+            <div class="result-card-content">{props_display}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col3:
         st.markdown(f"""
         <div class="result-card">
             <div class="result-card-header">BLOCKING</div>
             <div class="result-card-content">{result.blocking}</div>
         </div>
         """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown(f"""
-        <div class="result-card">
-            <div class="result-card-header">NARRATIVE REASONING</div>
-            <div class="result-card-content">{result.narrative_reasoning[:150]}{'...' if len(result.narrative_reasoning) > 150 else ''}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Complete Analysis Expander
+
+
+    # col_full = st.columns(1)
+
+    # with col_full:
+    #     st.markdown(f"""
+    #     <div class="result-card">
+    #         <div class="result-card-header">NARRATIVE REASONING</div>
+    #         <div class="result-card-content">
+    #             {reasoning_text[:200]}
+    #             {'...' if len(reasoning_text) > 200 else ''}
+    #         </div>
+    #     </div>
+    #     """, unsafe_allow_html=True)
+
+
     st.markdown("<br><br>", unsafe_allow_html=True)
+
     with st.expander("📋 View Complete Analysis"):
         st.markdown(f"**Full Narrative Reasoning:** {result.narrative_reasoning}")
         st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown(f"**Props:** {', '.join(result.props) if result.props else 'None specified'}")
+        st.markdown(f"**Props:** {props_display}")
         st.markdown(f"**Costumes:** {result.costumes}")
         st.markdown("<br>", unsafe_allow_html=True)
         st.json(result.model_dump())
-    
+
     st.markdown('</div>', unsafe_allow_html=True)
 
-
+   
 # Analysis execution
 if analyze_button:
     if scene_text and scene_text.strip():
-        with st.spinner("🎬 Analyzing your scene..."):
-            try:
-                result = agent.run(scene_text)
-                render_result(result)
-            except Exception as e:
-                st.error(f"Analysis Error: {str(e)}")
-    else:
-        st.warning("⚠️ Please enter a scene to analyze")
+        loader = st.empty()
+        loader.markdown("""
+        <div class="center">
+            <div class="loader"></div>
+            <p>🎬 Analyzing your scene...</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        try:
+            result = agent.run(scene_text)
+            loader.empty()
+            render_result(result)
+        except Exception as e:
+            loader.empty()
+            st.error(f"Analysis Error: {str(e)}")

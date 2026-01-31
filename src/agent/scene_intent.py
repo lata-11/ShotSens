@@ -21,7 +21,7 @@ class SceneAgent:
         self.primary_prompt = get_primary_scene_prompt(
             self.parser.get_format_instructions()
         )
-        self.minimal_prompt = get_minimal_scene_prompt()   # <-- NO format instructions
+        self.minimal_prompt = get_minimal_scene_prompt()  
 
         # LCEL chain ONLY for primary run
         self.primary_chain = self.primary_prompt | self.llm | self.parser

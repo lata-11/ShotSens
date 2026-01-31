@@ -4,7 +4,7 @@ from src.agent.prompt_builder import build_image_prompt
 
 class ImageGenerator:
     def __init__(self):
-        self.client = genai.Client(api_key=os.getenv("AIzaSyAFCIVpPPvz654ASTpZ2gmxq6XissMolAQ"))
+        self.client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
         print(dir(self.client.models))
 
     def generate(self, intent_dict):

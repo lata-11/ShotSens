@@ -1,0 +1,2 @@
+# ShotSens
+CINE AI HACKFEST

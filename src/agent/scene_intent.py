@@ -36,7 +36,10 @@ class SceneAgent:
         self.minimal_parser = PydanticOutputParser(
             pydantic_object=MinimalSceneOutput
         )
-        self.minimal_prompt = get_minimal_scene_prompt()
+
+        self.minimal_prompt = get_minimal_scene_prompt(
+            self.minimal_parser.get_format_instructions()
+        )
         self.minimal_chain = (
             self.minimal_prompt
             | self.llm
@@ -44,73 +47,48 @@ class SceneAgent:
         )
 
 
-    def run(self, scene_text, mode="🎬 Director's Cut", conf_threshold=0.10, max_runs=5):
-        is_directors_cut = mode == "🎬 Director's Cut"
+    def run(self, scene_text, mode="🎬 Director's Cut", max_iterations=3, threshold=0.05):
+        """
+        Runs the LLM multiple times:
+        - First run: main output
+        - Additional runs: only for confidence validation
+        - Stop early if confidence stabilizes
+        """
 
-        # 1️⃣ Primary run
-        primary = self.primary_chain.invoke({"scene_text": scene_text})
-        primary_dict = primary.dict()
-        print("Primary run output:", primary_dict)
-
-        conf_values = [primary_dict["confidence"]]
-
-        # 2️⃣ Confidence validation (Director's Cut only)
-        if is_directors_cut:
-            for _ in range(max_runs - 1):
-                minimal = self.minimal_chain.invoke({"scene_text": scene_text})
-                minimal_dict = minimal.dict()
-                conf_values.append(minimal_dict["confidence"])
-
-                if should_stop(conf_values, conf_threshold):
-                    break
-
-        # 3️⃣ Final confidence
-        final_conf = validate_confidence(conf_values) or conf_values[0]
-        primary_dict["validated_confidence"] = final_conf
-
-        return SceneOutput(**primary_dict)
-
-
-
-
-        # Prepare minimal prompt
-        minimal_prompt_text = self.minimal_prompt.format(scene_text=scene_text)
-
-        # Iterative minimal runs
-        if is_directors_cut:
-            for _ in range(max_runs - 1):
-                run_msg = self.llm.invoke(minimal_prompt_text)
-                run_dict = self._to_dict(run_msg)
-                print("Minimal run output:", run_dict)
-                conf_values.append(run_dict["confidence"])
-
-                # Early stopping condition
-                if should_stop(conf_values, conf_threshold):
-                    break
-
-        # Compute final validated confidence
-        final_conf = validate_confidence(conf_values) or conf_values[0]
-
-        # Attach to primary output
-        run1_dict["validated_confidence"] = final_conf
-
-        if is_directors_cut:
-            return SceneOutput(**run1_dict)
+        # 1️⃣ Choose which model output is the MAIN one
+        if mode == "🎬 Director's Cut":
+            # main = primary prompt
+            main_run = self.primary_chain.invoke({"scene_text": scene_text})
         else:
-            # Minimal mode → adapt to SceneOutput schema
-            return SceneOutput(
-                emotion=run1_dict["emotion"],
-                visual_mood=run1_dict["visual_mood"],
-                camera_style=run1_dict["camera_style"],
-                composition=run1_dict.get("composition", ""),
-                set_design="N/A",
-                props=[],
-                blocking="N/A",
-                costumes="N/A",
-                narrative_reasoning="Production Notes Mode",
-                confidence=run1_dict["confidence"],
-                validated_confidence=final_conf
-            )
+            # main = minimal prompt
+            main_run = self.minimal_chain.invoke({"scene_text": scene_text})
+
+        main_dict = main_run.dict()
+
+        # Start collecting confidence values
+        conf_values = [main_dict["confidence"]]
+
+        # 2️⃣ Additional runs for confidence validation only
+        for i in range(1, max_iterations):
+
+            # Always use minimal prompt for validation
+            validation_run = self.minimal_chain.invoke({"scene_text": scene_text})
+            validation_dict = validation_run.dict()
+
+            conf_values.append(validation_dict["confidence"])
+
+            # Early stopping: if last 2 confidences are close enough
+            if should_stop(conf_values, threshold):
+                break
+
+        # 3️⃣ Final validated confidence
+        final_conf = validate_confidence(conf_values)
+
+        # Attach validated confidence to the main output
+        main_dict["validated_confidence"] = final_conf
+
+        return SceneOutput(**main_dict)
+
 
 
     def generate_image(self, scene_output):

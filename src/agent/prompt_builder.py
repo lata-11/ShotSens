@@ -49,39 +49,42 @@ SCENE:
     )
 
 
-def get_minimal_scene_prompt():
+def get_minimal_scene_prompt(format_instructions: str):
     template = """
-You are summarizing cinematic intent using short production labels.
-
-Return STRICT JSON ONLY.
-
-OUTPUT FORMAT:
-{{
-  "emotion": "...",
-  "visual_mood": "...",
-  "camera_style": "...",
-  "composition": "...",
-  "set_design": "...",
-  "props": "...",
-  "blocking": "...",
-  "confidence": float
-}}
+You are generating semantic intents as short production notes for a film scene.
+Strictly return JSON
 
 RULES:
-- Max 3–5 words per field
-- No poetic language
-- No storytelling
-- No symbolism
-- No text outside JSON
+- Keep every field extremely short (5–10 words).
+- Focus on practical, production-friendly descriptions.
+- Do NOT omit any fields.
+- "Props" must ALWAYS be a string.
+- Avoid style, poetry, or cinematographer language.
+- Use neutral, factual, logistical wording.
 
-SCENE:
+REQUIRED FOCUS:
+- Emotional tone and character psychology
+- Visual mood and lighting intention
+- Camera choices and audience perspective
+- Set design and environmental storytelling
+- Props relevance
+- Actor blocking and spatial relationships
+- Frame composition and focus
+- Costume cues and character state
+- Narrative reasoning (brief explanation)
+
+Scene:
 {scene_text}
+
+{format_instructions}
 """
 
     return PromptTemplate(
         template=template,
-        input_variables=["scene_text"]
+        input_variables=["scene_text"],
+        partial_variables={"format_instructions": format_instructions},
     )
+
 
 
 def build_image_prompt(intent: dict) -> str:

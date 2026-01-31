@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, validator
 
 class SceneOutput(BaseModel):
     emotion: str = Field(description="Dominant emotional subtext")
@@ -6,7 +6,7 @@ class SceneOutput(BaseModel):
     camera_style: str = Field(description="Camera move (e.g., slow push-in)")
     confidence: float = Field(description="Logic-based certainty score [0-1]")
 
-    @field_validator('confidence')
+    @validator('confidence')
     @classmethod
     def validate_confidence(cls, v):
         if not 0 <= v <= 1:

@@ -1,4 +1,4 @@
-from langchain.output_parsers import OutputFixingParser
+from langchain_core.output_parsers import OutputFixingParser
 from services.llm_service import get_llm
 
 def get_safe_parser(base_parser):

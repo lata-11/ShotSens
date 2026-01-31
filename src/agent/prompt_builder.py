@@ -1,4 +1,5 @@
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
+
 
 DIRECTOR_TEMPLATE = """
 You are a Director and Cinematographer analyzing a script.

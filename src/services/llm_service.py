@@ -1,9 +1,9 @@
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 import os
 
 def get_llm():
-    return ChatOpenAI(
-        model="gpt-4o", 
-        temperature=0, 
-        api_key=os.getenv("OPENAI_API_KEY")
+    return ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash",
+        temperature=0,
+        google_api_key=os.getenv("GOOGLE_API_KEY")
     )

@@ -8,7 +8,7 @@ class SceneAgent:
         self.llm = get_llm()
         self.parser = PydanticOutputParser(pydantic_object=SceneOutput)
         self.prompt = get_scene_prompt(self.parser.get_format_instructions())
-        
+
         # The LCEL Chain: Prompt -> LLM -> Parser
         self.chain = self.prompt | self.llm | self.parser
 

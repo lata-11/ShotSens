@@ -30,3 +30,13 @@ class SceneOutput(BaseModel):
         if not 0 <= v <= 1:
             raise ValueError("Confidence must be between 0 and 1")
         return v
+
+class MinimalSceneOutput(BaseModel):
+    emotion: str
+    visual_mood: str
+    camera_style: str
+    composition: str
+    set_design: str
+    props: str
+    blocking: str
+    confidence: float

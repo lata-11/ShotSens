@@ -576,6 +576,16 @@ st.markdown("""
         .center {
         text-align: center;
         }
+    div[role="radiogroup"] {
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    div[role="radiogroup"] label {
+        font-weight: 600 !important;
+        color: #6366f1 !important;
+    }
+
     /* Hide Streamlit branding */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
@@ -631,6 +641,25 @@ scene_text = st.text_area(
     label_visibility="collapsed"
 )
 
+# Mode Selection (Director's Cut vs Production Notes)
+st.markdown("""
+<div style="text-align:center; margin-bottom: 1.5rem;">
+    <p style="font-weight:600; color:#475569; margin-bottom:0.5rem;">
+        Choose Output Style
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+mode = st.radio(
+    "Output Mode",
+    ["🎬 Director's Cut", "📝 Production Notes"],
+    horizontal=True,
+    label_visibility="collapsed"
+)
+
+
+st.session_state.output_mode = mode
+
 # Centered buttons below input
 col1, col2, col3 = st.columns([1, 2, 1])
 
@@ -658,7 +687,7 @@ if "example_text" in st.session_state and not scene_text:
 def render_result(result):
     st.markdown('<div class="results-container">', unsafe_allow_html=True)
     
-    # ---------- Emotional Analysis Section ----------
+    # Emotional Analysis Section 
     st.markdown('<div class="section-header" style="margin-top: 3rem;">Emotional Analysis</div>', unsafe_allow_html=True)
 
     confidence_display = (
@@ -800,7 +829,7 @@ if analyze_button:
         """, unsafe_allow_html=True)
 
         try:
-            result = agent.run(scene_text)
+            result = agent.run(scene_text, mode=st.session_state.output_mode)
             loader.empty()
             render_result(result)
         except Exception as e:

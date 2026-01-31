@@ -19,6 +19,9 @@ def main():
     result = agent.run(script_snippet)
     print(f"ShotSens Intent: {result.model_dump_json(indent=2)}")
 
+    agent.generate_image(result)
+    print("\nImage generation complete!")
+
 
 if __name__ == "__main__":
     main()

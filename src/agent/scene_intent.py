@@ -1,19 +1,22 @@
+from services.llm_service import get_llm
+from image_generator.image_generator import ImageGenerator
+
 from langchain_core.output_parsers import PydanticOutputParser
-import json
 from langchain_core.messages import AIMessage
+import json
+
 from schema.scene_schema import SceneOutput
 from agent.prompt_builder import (
     get_primary_scene_prompt,
     get_minimal_scene_prompt
 )
-from services.llm_service import get_llm
-
 from confidence.confidence_validator import should_stop, validate_confidence
+
 
 class SceneAgent:
     def __init__(self):
         self.llm = get_llm()
-
+        self.image_gen = ImageGenerator()
         # Parser ONLY for primary (full) run
         self.parser = PydanticOutputParser(pydantic_object=SceneOutput)
 
@@ -79,4 +82,5 @@ class SceneAgent:
         run1_dict["validated_confidence"] = final_conf
         return SceneOutput(**run1_dict)
 
-
+    def generate_image(self, scene_output):
+            return self.image_gen.generate(scene_output.model_dump())

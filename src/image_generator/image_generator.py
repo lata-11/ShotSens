@@ -1,6 +1,6 @@
 from google import genai
 import os
-from agent.prompt_builder import build_image_prompt
+from src.agent.prompt_builder import build_image_prompt
 
 class ImageGenerator:
     def __init__(self):

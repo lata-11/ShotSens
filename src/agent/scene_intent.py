@@ -1,5 +1,5 @@
 from src.services.llm_service import get_llm
-from image_generator.image_generator import ImageGenerator
+from src.image_generator.image_generator import ImageGenerator
 
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.messages import AIMessage

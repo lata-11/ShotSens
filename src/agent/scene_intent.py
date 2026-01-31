@@ -6,7 +6,7 @@ from langchain_core.messages import AIMessage
 import json
 
 from src.schema.scene_schema import SceneOutput
-from agent.prompt_builder import (
+from src.agent.prompt_builder import (
     get_primary_scene_prompt,
     get_minimal_scene_prompt
 )

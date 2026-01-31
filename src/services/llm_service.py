@@ -1,13 +1,9 @@
-import json
+from langchain_openai import ChatOpenAI
+import os
 
-def call_llm(prompt: str) -> dict:
-    # Replace with actual API call later
-    print("Sending prompt to LLM...")
-    
-    # Mock response for now
-    return {
-        "emotion": "tension",
-        "visual_mood": "low_key",
-        "camera_style": "slow_push_in",
-        "confidence": 0.75
-    }
+def get_llm():
+    return ChatOpenAI(
+        model="gpt-4o", 
+        temperature=0, 
+        api_key=os.getenv("OPENAI_API_KEY")
+    )

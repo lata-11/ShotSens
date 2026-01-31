@@ -1,12 +1,17 @@
-from agent.scene_intent import SceneIntentAgent
+from agent.scene_intent import SceneAgent
+from dotenv import load_dotenv
+
+load_dotenv() # Loads your .env file
+
+def main():
+    agent = SceneAgent()
+    script_snippet = """
+    INT. HOSPITAL ROOM - NIGHT
+    SHE laughs as HE jokes. Her hands tremble under the blanket.
+    """
+    
+    result = agent.run(script_snippet)
+    print(f"ShotSens Intent: {result.json(indent=2)}")
 
 if __name__ == "__main__":
-    scene = """
-    They sit in silence. The clock ticks loudly.
-    He avoids eye contact.
-    """
-
-    agent = SceneIntentAgent()
-    result = agent.analyze_scene(scene)
-
-    print(result)
+    main()

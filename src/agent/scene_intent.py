@@ -1,12 +1,15 @@
-from services.llm_service import call_llm
-from agent.prompt_builder import build_prompt
+from langchain.output_parsers import PydanticOutputParser
+from schemas.scene_schema import SceneOutput
+from agent.prompt_builder import get_scene_prompt
+from services.llm_service import get_llm
 
-
-class SceneIntentAgent:
+class SceneAgent:
     def __init__(self):
-        pass
+        self.llm = get_llm()
+        self.parser = PydanticOutputParser(pydantic_object=SceneOutput)
+        self.prompt = get_scene_prompt(self.parser.get_format_instructions())
+        # The LCEL Chain: Prompt -> LLM -> Parser
+        self.chain = self.prompt | self.llm | self.parser
 
-    def analyze_scene(self, scene_text: str) -> dict:
-        prompt = build_prompt(scene_text)
-        response = call_llm(prompt)
-        return response
+    def run(self, scene_text):
+        return self.chain.invoke({"scene_text": scene_text})

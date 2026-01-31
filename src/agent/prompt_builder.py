@@ -1,15 +1,17 @@
-def build_prompt(scene_text: str) -> str:
-    return f"""
-You are a film director and cinematographer AI.
+from langchain.prompts import PromptTemplate
 
-Analyze the following scene and infer:
-- emotion
-- visual mood
-- camera style
-- confidence (0–1)
+DIRECTOR_TEMPLATE = """
+You are a Director and Cinematographer analyzing a script.
+{format_instructions}
 
-Return ONLY valid JSON.
+SCENE TEXT: {scene_text}
 
-Scene:
-{scene_text}
+Analyze character subtext and hospital/night settings to infer visuals.
 """
+
+def get_scene_prompt(parser_instructions):
+    return PromptTemplate(
+        template=DIRECTOR_TEMPLATE,
+        input_variables=["scene_text"],
+        partial_variables={"format_instructions": parser_instructions}
+    )

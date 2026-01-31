@@ -19,6 +19,11 @@ class SceneOutput(BaseModel):
     narrative_reasoning: str = Field(description="Why these choices fit the subtext")
     confidence: float = Field(description="Score between 0 and 1")
 
+    validated_confidence: float | None = Field(
+        default=None,
+        description="Confidence score validated using adaptive sampling"
+    )
+
     @validator('confidence')
     @classmethod
     def validate_confidence(cls, v):

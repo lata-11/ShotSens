@@ -4,7 +4,7 @@ import os
 # Add the src directory to the Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from src.agent.scene_intent import SceneAgent
+from agent.scene_intent import SceneAgent
 from dotenv import load_dotenv
 
 load_dotenv() # Loads your .env file

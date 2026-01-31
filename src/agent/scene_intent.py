@@ -5,7 +5,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.messages import AIMessage
 import json
 
-from schema.scene_schema import SceneOutput
+from src.schema.scene_schema import SceneOutput
 from agent.prompt_builder import (
     get_primary_scene_prompt,
     get_minimal_scene_prompt

@@ -1,18 +1,31 @@
 from langchain_core.prompts import PromptTemplate
 
+def get_scene_prompt(format_instructions: str):
+    template = """
+You are a cinematic scene analyst.
 
-DIRECTOR_TEMPLATE = """
-You are a Director and Cinematographer analyzing a script.
+Your task:
+Extract ONLY essential cinematic direction from the scene.
+Avoid storytelling, metaphors, or unnecessary explanation.
+
+STRICT RULES:
+- Be concise and practical
+- Max 2 sentences per field
+- props can be well researched
+- Focus on actionable filmmaking choices
+- No emotional interpretation beyond what is visible
+- No poetic language
+- No repetition
+- Output must follow the format exactly
+
+Scene:
+{scene_text}
+
 {format_instructions}
-
-SCENE TEXT: {scene_text}
-
-Analyze character subtext and hospital/night settings to infer visuals.
 """
 
-def get_scene_prompt(parser_instructions):
     return PromptTemplate(
-        template=DIRECTOR_TEMPLATE,
+        template=template,
         input_variables=["scene_text"],
-        partial_variables={"format_instructions": parser_instructions}
+        partial_variables={"format_instructions": format_instructions},
     )

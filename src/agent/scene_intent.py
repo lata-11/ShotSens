@@ -47,7 +47,7 @@ class SceneAgent:
         )
 
 
-    def run(self, scene_text, mode="🎬 Director's Cut", max_iterations=3, threshold=0.05):
+    def run(self, scene_text, mode="director", max_iterations=3, threshold=0.05):
         """
         Runs the LLM multiple times:
         - First run: main output
@@ -56,7 +56,7 @@ class SceneAgent:
         """
 
         # 1️⃣ Choose which model output is the MAIN one
-        if mode == "🎬 Director's Cut":
+        if mode == "director":
             # main = primary prompt
             main_run = self.primary_chain.invoke({"scene_text": scene_text})
         else:

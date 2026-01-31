@@ -697,13 +697,12 @@ st.markdown("""
 
 mode = st.radio(
     "Output Mode",
-    ["🎬 Director's Cut", "📝 Production Notes"],
-    horizontal=True,
-    label_visibility="collapsed"
+    ["director", "production"],
+    format_func=lambda m: "🎬 Director's Cut" if m=="director" else "📝 Production Notes",
+    key="output_mode",
+    horizontal=True
 )
 
-
-st.session_state.output_mode = mode
 
 # Centered buttons below input
 col1, col2, col3 = st.columns([1, 2, 1])
@@ -901,7 +900,7 @@ if analyze_button:
         """, unsafe_allow_html=True)
 
         try:
-            result = agent.run(scene_text, mode=st.session_state.output_mode)
+            result = agent.run(scene_text, mode=st.session_state.get("output_mode"))
             loader.empty()
             render_result(result)
         except Exception as e:

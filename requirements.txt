@@ -1,6 +1,8 @@
 streamlit
 langchain
 langgraph
-openai
-requests
+langchain-google-genai
+google-generativeai
 streamlit-lottie
+requests
+tiktoken

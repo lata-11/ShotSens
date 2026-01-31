@@ -35,39 +35,67 @@ SCENE:
 
 def get_minimal_scene_prompt():
     template = """
-You are summarizing the SAME cinematic intent that a film director would describe  
-in the longer version of this analysis.  
-Your task is to output a *compressed version* of the same meaning  
-using 2–3 word cinematic labels.
+    You are summarizing the SAME cinematic intent that a film director would describe  
+    in the longer version of this analysis.  
+    Your task is to output a *compressed version* of the same meaning  
+    using 2–3 word cinematic labels.
 
-These short labels MUST represent the same emotional tone, visual mood,  
-and camera intention that would appear in the full director-style description.  
-Do NOT reinterpret or shift emotional categories.  
-Only compress — do not alter meaning.
+    These short labels MUST represent the same emotional tone, visual mood,  
+    and camera intention that would appear in the full director-style description.  
+    Do NOT reinterpret or shift emotional categories.  
+    Only compress — do not alter meaning.
 
-OUTPUT STRICT JSON (escaped braces):
-{{
-  "emotion": "...",
-  "visual_mood": "...",
-  "camera_style": "...",
-  "confidence": float
-}}
+    OUTPUT STRICT JSON (escaped braces):
+    {{
+    "emotion": "...",
+    "visual_mood": "...",
+    "camera_style": "...",
+    "confidence": float
+    }}
 
-RULES:
-- Max 3 words per field
-- The meaning must match the longer version of the same categories
-- No story interpretation
-- No new creative angles
-- No poetic language
-- No object placement
-- No long sentences
-- No text outside the JSON
+    RULES:
+    - Max 3 words per field
+    - The meaning must match the longer version of the same categories
+    - No story interpretation
+    - No new creative angles
+    - No poetic language
+    - No object placement
+    - No long sentences
+    - No text outside the JSON
 
-SCENE:
-{scene_text}
-"""
+    SCENE:
+    {scene_text}
+    """
 
     return PromptTemplate(
         template=template,
         input_variables=["scene_text"]
     )
+
+def build_image_prompt(intent: dict) -> str:
+    """
+    Convert scene intent to an image generation prompt for Gemini.
+    """
+
+    return f"""
+    Generate a cinematic keyframe image based on this scene intent.
+
+    Emotion: {intent['emotion']}
+    Visual Mood: {intent['visual_mood']}
+    Camera Style: {intent['camera_style']}
+    Set Design: {intent['set_design']}
+    Props: {', '.join(intent['props'])}
+    Costumes: {intent['costumes']}
+    Blocking: {intent['blocking']}
+    Composition: {intent['composition']}
+
+    Requirements:
+    - Produce a single high-quality cinematic frame.
+    - Accurate film lighting and mood.
+    - Realistic camera angle based on the camera style.
+    - Include set, props, and costumes where appropriate.
+    - DO NOT add characters or objects not mentioned.
+    - DO NOT modify the emotional tone.
+
+    Return ONLY the generated image, not text.
+    """

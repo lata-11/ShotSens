@@ -2,6 +2,10 @@ import streamlit as st
 from src.agent.scene_intent import SceneAgent
 from utils.convert_image_to_base64 import get_base64_image
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
+
 st.set_page_config(page_title="ShotSens", layout="wide", initial_sidebar_state="collapsed")
 camera_base64 = get_base64_image("src/assets/Photo-Camera-PNG-Pic.png")
 

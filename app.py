@@ -622,6 +622,46 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
+# Image Container
+st.markdown("""
+<style>
+
+/* 1. Center the entire image block */
+div[data-testid="stImage"] {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+/* 2. Center internal containers too */
+div[data-testid="stImage"] > div {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+/* 3. Final control of the <img> element */
+div[data-testid="stImage"] img {
+    width: 50% !important;
+    height: auto !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
+}
+
+/* 4. Mobile: make image wider for readability */
+@media (max-width: 600px) {
+    div[data-testid="stImage"] img {
+        width: 90% !important;
+    }
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+
 
 agent = SceneAgent()
 
@@ -652,9 +692,12 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 
 # Convert base64 → PIL image
+# def b64_to_pil(b64_string):
+#     img_bytes = base64.b64decode(b64_string)
+#     return Image.open(BytesIO(img_bytes))
+
 def b64_to_pil(b64_string):
-    img_bytes = base64.b64decode(b64_string)
-    return Image.open(BytesIO(img_bytes))
+    return Image.open(BytesIO(base64.b64decode(b64_string)))
 
 if load_example:
     if scene_text.strip():
@@ -671,20 +714,16 @@ if load_example:
 
     st.rerun()
 
-
 if "generated_image" in st.session_state:
     img_b64 = st.session_state["generated_image"]
 
-    # HTML render (bypasses all PIL/Streamlit issues)
-    st.markdown(
-        f"""
-        <div style='text-align:center;'>
-            <img src="data:image/png;base64,{img_b64}" 
-                 style="width:50%;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.2);" />
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    pil_img = b64_to_pil(img_b64)
+
+    # This gives Streamlit the PIL image
+    st.markdown('<div class="responsive-img-container">', unsafe_allow_html=True)
+    st.image(pil_img)
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 

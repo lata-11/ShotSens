@@ -48,6 +48,20 @@ test_cases = [
         Silence fills the air.
         """,
     },
+    {
+        "name": "eerie_scene",
+        "input": """
+        Dark, silent, and eerie street.
+        PODCAST VOICE:
+        Yem chesthudhavida aa ganta sepu anega?
+        - SUSTAIN: Dark street.
+        A loud cry is heard from the balcony. Spine chilling. Like
+        a ghost sobbing, the cry is reverberating into the night.
+        PODCAST VOICE:
+        Roju sarigga ganta... Ratri yenimidhi nundi tommidhi varaku... yedusthundhi!
+        Bhayamkaramga. Ollu gagurlupodechela... Oka pretham laanti yedupu. PRATHI ROJU!!!
+        """,
+    }
 ]
 
 @pytest.mark.parametrize("case", test_cases)
@@ -55,7 +69,8 @@ def test_scene_agent(agent, case):
     result = agent.run(case["input"])
 
     print(f"\n--- Test Case: {case['name']} ---")
-    print(json.dumps(result.model_dump(), indent=2))
+    print("Prettified Response JSON:")
+    print(json.dumps(result.model_dump(), indent=4))  # Use indent=4 for better readability
 
     # Basic sanity assertions
     assert result is not None

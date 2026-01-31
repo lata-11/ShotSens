@@ -1,10 +1,23 @@
 from pydantic import BaseModel, Field, validator
 
 class SceneOutput(BaseModel):
-    emotion: str = Field(description="Dominant emotional subtext")
+    # Existing Fields
+    emotion: str = Field(description="Core emotional intent")
     visual_mood: str = Field(description="Lighting/atmosphere (e.g., low-key)")
-    camera_style: str = Field(description="Camera move (e.g., slow push-in)")
-    confidence: float = Field(description="Logic-based certainty score [0-1]")
+    camera_style: str = Field(description="Movement/framing (e.g., slow push-in)")
+    
+    # Production Design Fields 
+    set_design: str = Field(description="Description of the environment and key architectural elements")
+    props: list[str] = Field(description="List of significant objects characters interact with")
+    costumes: str = Field(description="Wardrobe suggestions that reflect character state and mood")
+    
+    # New Blocking & Composition Fields 
+    blocking: str = Field(description="Movement and physical relationship of actors in the space")
+    composition: str = Field(description="How elements are arranged in the frame (e.g., Rule of Thirds, Leading Lines)")
+    
+    # Metadata
+    narrative_reasoning: str = Field(description="Why these choices fit the subtext")
+    confidence: float = Field(description="Score between 0 and 1")
 
     @validator('confidence')
     @classmethod

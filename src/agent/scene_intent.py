@@ -1,4 +1,4 @@
-from services.llm_service import get_llm
+from src.services.llm_service import get_llm
 from image_generator.image_generator import ImageGenerator
 
 from langchain_core.output_parsers import PydanticOutputParser

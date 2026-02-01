@@ -631,7 +631,7 @@ st.markdown(f"""
         </p>
     </div>
 """, unsafe_allow_html=True)
-
+ 
 # Image Container
 st.markdown("""
 <style>
@@ -747,10 +747,12 @@ if "generated_image" in st.session_state:
 
     pil_img = b64_to_pil(img_b64)
 
-    # This gives Streamlit the PIL image
-    st.markdown('<div class="responsive-img-container">', unsafe_allow_html=True)
-    st.image(pil_img)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Render centered image using inline HTML (keeps precise centering)
+    st.markdown(f"""
+    <div class="responsive-img-container" style="display:flex; justify-content:center;">
+        <img src="data:image/png;base64,{img_b64}" style="width:50%; height:auto; border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,0.15); display:block; margin:0 auto;" />
+    </div>
+    """, unsafe_allow_html=True)
 
 
 

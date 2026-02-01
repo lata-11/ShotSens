@@ -5,12 +5,17 @@
 ShotSens is an AI-powered engine designed to bridge the gap between written scripts and visual production. It extracts the implicit creative intent—emotion, mood, and visual tone—from a screenplay and converts it into structured visual planning signals and generated imagery.
 
 ## 🎬 Problem Statement
-Scripts describe actions and dialogue, but **scene intent**—including emotion, mood, and visual tone—is often implicit and not directly stated. This ambiguity can lead to misinterpretation during the pre-production phase.
+Scripts describe actions and dialogue, but **scene intent** including emotion, mood, and visual tone is often implicit and not directly stated. This ambiguity can lead to misinterpretation during the pre-production phase.
 
 **ShotSens** solves this by building an AI system that:
 1.  **Extracts creative intent** from raw script text.
 2.  **Converts it into structured data** (camera angles, lighting, set design).
 3.  **Generates visual representations** to aid storyboard generators, directors’ assistants, and previz systems.
+
+---
+
+## 📂 Deployed link 
+- https://shotsens-cine-ai-hackfest.streamlit.app/
 
 ---
 
@@ -116,8 +121,7 @@ shotsens/
     └── services/           # LLM service configuration
 ```
 
+## 📂 Demo
 ---
 
-## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.

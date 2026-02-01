@@ -53,6 +53,7 @@ class SceneAgent:
         - First run: main output
         - Additional runs: only for confidence validation
         - Stop early if confidence stabilizes
+        - Includes fallback values for missing fields
         """
 
         # 1️⃣ Choose which model output is the MAIN one
@@ -65,8 +66,11 @@ class SceneAgent:
 
         main_dict = main_run.dict()
 
+        # 🔧 Add default values for missing fields
+        main_dict = self._fill_missing_fields(main_dict)
+
         # Start collecting confidence values
-        conf_values = [main_dict["confidence"]]
+        conf_values = [main_dict.get("confidence", 0.7)]
 
         # 2️⃣ Additional runs for confidence validation only
         for i in range(1, max_iterations):
@@ -74,8 +78,9 @@ class SceneAgent:
             # Always use minimal prompt for validation
             validation_run = self.minimal_chain.invoke({"scene_text": scene_text})
             validation_dict = validation_run.dict()
+            validation_dict = self._fill_missing_fields(validation_dict)
 
-            conf_values.append(validation_dict["confidence"])
+            conf_values.append(validation_dict.get("confidence", 0.7))
 
             # Early stopping: if last 2 confidences are close enough
             if should_stop(conf_values, threshold):
@@ -88,6 +93,37 @@ class SceneAgent:
         main_dict["validated_confidence"] = final_conf
 
         return SceneOutput(**main_dict)
+
+    def _fill_missing_fields(self, output_dict: dict) -> dict:
+        """Fill missing required fields with sensible defaults."""
+        defaults = {
+            "composition": "Balanced framing with clear focal points",
+            "narrative_reasoning": "Analysis based on available scene context",
+            "confidence": 0.7,
+            "emotion": "Undetermined",
+            "visual_mood": "Naturalistic lighting",
+            "camera_style": "Standard coverage",
+            "set_design": "Generic setting",
+            "props": [],
+            "costumes": "Practical clothing",
+            "blocking": "Standard actor positioning"
+        }
+        
+        missing = []
+        for key, default_value in defaults.items():
+            if key not in output_dict or output_dict[key] is None:
+                output_dict[key] = default_value
+                missing.append(key)
+        
+        # Create a message if any fields were filled
+        if missing:
+            missing_str = ", ".join(missing)
+            output_dict["missing_fields_message"] = (
+                f"⚠️ The model response was incomplete. The following fields were auto-filled with contextual defaults: {missing_str}. "
+                f"For better results, try a more detailed scene description. Try only one scene at a time."
+            )
+        
+        return output_dict
 
 
 

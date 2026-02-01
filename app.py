@@ -712,6 +712,15 @@ with center:
         horizontal=True
     )
 
+# Track previous mode to detect changes
+if "prev_output_mode" not in st.session_state:
+    st.session_state.prev_output_mode = mode
+elif st.session_state.prev_output_mode != mode:
+    # Mode changed - clear generated image
+    if "generated_image" in st.session_state:
+        del st.session_state["generated_image"]
+    st.session_state.prev_output_mode = mode
+
 
 # Centered buttons below input
 col1, col2, col3 = st.columns([1, 2, 1])
@@ -738,18 +747,32 @@ def b64_to_pil(b64_string):
 
 if load_example:
     if scene_text.strip():
-        with st.spinner("🎨 Generating visual scene setup..."):
-            result = agent.run(scene_text)
-            generated_imgs_b64 = agent.generate_image(result)
+        loader = st.empty()
+        loader.markdown("""
+        <div class="center">
+            <div class="loader"></div>
+            <p>🎨 Generating visual scene setup...</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        result = agent.run(scene_text)
+        generated_imgs_b64 = agent.generate_image(result)
 
-            if generated_imgs_b64:
-                st.session_state["generated_image"] = generated_imgs_b64[0]
-            else:
-                st.warning("No image generated.")
+        loader.empty()
+        
+        if generated_imgs_b64:
+            st.session_state["generated_image"] = generated_imgs_b64[0]
+        else:
+            st.warning("No image generated.")
     else:
         st.warning("Please enter a scene first.")
 
     st.rerun()
+
+# Clear image when analyze button is clicked
+if analyze_button:
+    if "generated_image" in st.session_state:
+        del st.session_state["generated_image"]
 
 if "generated_image" in st.session_state:
     img_b64 = st.session_state["generated_image"]
@@ -768,6 +791,10 @@ if "generated_image" in st.session_state:
 
 def render_result(result):
     st.markdown('<div class="results-container">', unsafe_allow_html=True)
+    
+    # Display message if fields were auto-filled
+    if result.missing_fields_message:
+        st.warning(result.missing_fields_message)
     
     # Emotional Analysis Section 
     st.markdown('<div class="section-header" style="margin-top: 3rem;">Emotional Analysis</div>', unsafe_allow_html=True)

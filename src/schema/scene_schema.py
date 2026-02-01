@@ -24,6 +24,11 @@ class SceneOutput(BaseModel):
         description="Confidence score validated using adaptive sampling"
     )
 
+    missing_fields_message: str | None = Field(
+        default=None,
+        description="Message indicating which fields were auto-filled due to incomplete LLM response"
+    )
+
     @validator('confidence')
     @classmethod
     def validate_confidence(cls, v):

@@ -123,6 +123,20 @@ shotsens/
 ---
 
 ## 📂 Demo
+- ![WhatsApp Image 2026-02-01 at 09 52 30](https://github.com/user-attachments/assets/65fc33a7-c8bb-48ab-ac8e-c8ff998b7dcd)
+- ![WhatsApp Image 2026-02-01 at 09 52 30(1)](https://github.com/user-attachments/assets/f7096c90-3291-46d4-912a-334664cd9b10)
+  
+
+  ### Director's Note Mode
+- ![WhatsApp Image 2026-02-01 at 09 54 14](https://github.com/user-attachments/assets/b64fc549-0e7b-49bc-b3bd-112b8c967f46)
+- ![WhatsApp Image 2026-02-01 at 09 54 37](https://github.com/user-attachments/assets/ce08d223-7262-4ad3-a182-92cd9f0e89ef)
+
+  ### Production Note Mode
+- ![WhatsApp Image 2026-02-01 at 09 55 14](https://github.com/user-attachments/assets/6aa80a99-372a-4431-8509-39e324199ae1)
+- ![WhatsApp Image 2026-02-01 at 09 55 33](https://github.com/user-attachments/assets/0b1c3c7b-d403-41e2-8b2b-e74560cdad5e)
+
+  ### Set Scene generation
+- ![WhatsApp Image 2026-02-01 at 09 52 30(2)](https://github.com/user-attachments/assets/0ca95ab9-5ca3-4d41-a128-77a3cf41d510)
 
 ---
 

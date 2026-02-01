@@ -374,6 +374,11 @@ st.markdown("""
         text-align: center;
         transition: all 0.3s ease;
         box-shadow: 0 4px 16px rgba(139, 92, 246, 0.08);
+        height: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
     
     .emotion-card:hover {

@@ -21,7 +21,7 @@ Scripts describe actions and dialogue, but **scene intent** including emotion, m
 
 ## ✨ Features
 
-### 1. multimodal Analysis Modes
+### 1. Multimodal Analysis Modes
 *   **🎬 Director's Cut**: Deep-dive analysis providing detailed breakdowns of:
     *   **Camera Style**: Angles, movement, and lens choices.
     *   **Visual Mood**: Lighting, color palette, and atmosphere.
@@ -35,7 +35,6 @@ Scripts describe actions and dialogue, but **scene intent** including emotion, m
 
 ### 3. Cinematic UI
 *   Built with **Streamlit**, featuring a modern, responsive interface.
-*   **Dark/Light Mode**: Optimized for readability with a premium aesthetic.
 *   **Interactive Elements**: Toggle between analysis modes, view confidence scores, and expand detailed JSON outputs.
 
 ---

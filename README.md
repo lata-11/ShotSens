@@ -120,8 +120,10 @@ shotsens/
     ├── confidence/         # Confidence validation logic
     └── services/           # LLM service configuration
 ```
+---
 
 ## 📂 Demo
+
 ---
 
 

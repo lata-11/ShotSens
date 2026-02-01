@@ -43,7 +43,7 @@ Scripts describe actions and dialogue, but **scene intent** including emotion, m
 ## 🛠️ Tech Stack
 
 *   **Frontend**: [Streamlit](https://streamlit.io/) (Python-based UI)
-*   **AI Logic**: [LangChain](https://www.langchain.com/) & [LangGraph](https://langchain-ai.github.io/langgraph/)
+*   **AI Logic**: [LangChain](https://www.langchain.com/) 
 *   **LLM Provider**: [Google Gemini](https://ai.google.dev/) (`langchain-google-genai`)
 *   **Data Validation**: [Pydantic](https://docs.pydantic.dev/) for structured output parsing.
 *   **Image Generation**: Integrated AI image generation (internal service).

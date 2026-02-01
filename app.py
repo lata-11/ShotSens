@@ -700,13 +700,16 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-mode = st.radio(
-    "Output Mode",
-    ["director", "production"],
-    format_func=lambda m: "🎬 Director's Cut" if m=="director" else "📝 Production Notes",
-    key="output_mode",
-    horizontal=True
-)
+left, center, right = st.columns([1, 2, 1])
+
+with center:
+    mode = st.radio(
+        "",
+        ["director", "production"],
+        format_func=lambda m: "🎬 Director's Cut" if m=="director" else "📝 Production Notes",
+        key="output_mode",
+        horizontal=True
+    )
 
 
 # Centered buttons below input

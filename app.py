@@ -588,6 +588,7 @@ st.markdown("""
         text-align: center;
         }
     div[role="radiogroup"] {
+        margin-left: 150px;
         justify-content: center;
         gap: 2rem;
     }

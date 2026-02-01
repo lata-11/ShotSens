@@ -43,7 +43,7 @@ st.markdown("""
         backdrop-filter: blur(10px);
         border-bottom: 1px solid rgba(139, 92, 246, 0.1);
         padding: 1rem 2.5rem;
-        margin: -2rem -2rem 0 -2rem;
+        margin: -5rem -2rem 0 -2rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -170,9 +170,10 @@ st.markdown("""
         font-weight: 400;
         margin: 0 0 1rem 0;
         line-height: 1.7;
-        max-width: 750px;
-        margin-left: auto;
-        margin-right: auto;
+        max-width: 7500px;
+        margin-left: 150px;
+        margin-right: 150px;
+        align-items: center;
     }
     
     .hero-subtitle strong {
@@ -626,8 +627,7 @@ st.markdown(f"""
             <span class="hero-title-accent">Multimodal Scene Intent & Visual Planning Engine</span>
         </h1>
         <p class="hero-subtitle">
-            Transform screenplay scenes into detailed visual production insights with <strong>intelligent AI analysis</strong>. 
-            Perfect for directors, cinematographers, and production designers.
+            Transform screenplay scenes into detailed visual production insights with <strong>intelligent AI analysis</strong>.<br> Perfect for directors, cinematographers, and production designers.
         </p>
     </div>
 """, unsafe_allow_html=True)
